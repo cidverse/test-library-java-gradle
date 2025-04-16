@@ -173,6 +173,7 @@ jobs:
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
     permissions:
       id-token: write # provenance signing
+      security-events: write # upload security events
     timeout-minutes: 10
     steps:
       - name: Harden Runner
@@ -221,6 +222,7 @@ jobs:
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
     permissions:
       id-token: write # provenance signing
+      security-events: write # upload security events
     timeout-minutes: 10
     steps:
       - name: Harden Runner
@@ -266,13 +268,67 @@ jobs:
           if-no-files-found: ignore
           compression-level: 6
           include-hidden-files: true
+  # zizmor-scan
+  zizmor-scan:
+    name: 'zizmor-scan'
+    runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
+    permissions:
+      id-token: write # provenance signing
+      security-events: write # upload security events
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          disable-telemetry: true
+          disable-sudo: true
+          egress-policy: "${{ env.EGRESS_POLICY }}"
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            codeload.github.com:443
+            uploads.github.com:443
+            objects.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            ghcr.io:443
+            pkg-containers.githubusercontent.com:443
+      - name: Setup Tools
+        uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
+        with:
+          version: "${{ env.CID_VERSION }}"
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Action - zizmor-scan
+        env:
+          CID_WORKFLOW: "${{ env.CID_WORKFLOW }}"
+          CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GH_HOSTNAME: "${{ vars.GH_HOSTNAME }}"
+          GH_TOKEN: "${{ vars.GH_TOKEN }}"
+          ZIZMOR_NO_ONLINE_AUDITS: "${{ vars.ZIZMOR_NO_ONLINE_AUDITS }}"
+          ZIZMOR_OFFLINE: "${{ vars.ZIZMOR_OFFLINE }}"
+        run: |
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "zizmor-scan"
+      - name: Upload Outputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: "zizmor-scan-${{ github.run_id }}"
+          path: .dist/
+          retention-days: 1
+          if-no-files-found: ignore
+          compression-level: 6
+          include-hidden-files: true
   # github-sarif-upload
   github-sarif-upload:
     name: 'github-sarif-upload'
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
-    needs: [gitleaks-scan, semgrep-scan]
+    needs: [gitleaks-scan, semgrep-scan, zizmor-scan]
     permissions:
       id-token: write # provenance signing
+      security-events: write # upload security events
     timeout-minutes: 10
     steps:
       - name: Harden Runner
@@ -311,6 +367,12 @@ jobs:
           name: "semgrep-scan-${{ github.run_id }}"
           path: .dist
         continue-on-error: true
+      - name: Download Inputs > zizmor-scan
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        with:
+          name: "zizmor-scan-${{ github.run_id }}"
+          path: .dist
+        continue-on-error: true
       - name: Action - github-sarif-upload
         env:
           CID_WORKFLOW: "${{ env.CID_WORKFLOW }}"
@@ -331,7 +393,7 @@ jobs:
   gradle-publish-nightly-sonatype-snapshot:
     name: 'gradle-publish (nightly-sonatype-snapshot)'
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
-    needs: [gradle-build, gradle-test, gitleaks-scan, semgrep-scan, github-sarif-upload]
+    needs: [gradle-build, gradle-test, gitleaks-scan, semgrep-scan, zizmor-scan, github-sarif-upload]
     permissions:
       id-token: write # provenance signing
       packages: write # upload packages
