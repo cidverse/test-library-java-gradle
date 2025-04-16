@@ -286,14 +286,6 @@
           {
             "name": "GH_TOKEN",
             "description": "GH_TOKEN is required for some online audits"
-          },
-          {
-            "name": "ZIZMOR_NO_ONLINE_AUDITS",
-            "description": "Disables online audits."
-          },
-          {
-            "name": "ZIZMOR_OFFLINE",
-            "description": "Runs in offline mode."
           }
         ],
         "executables": [
@@ -492,7 +484,10 @@
             "host": "s01.oss.sonatype.org:443"
           },
           {
-            "host": "maven.pkg.github.com"
+            "host": "central.sonatype.com:443"
+          },
+          {
+            "host": "maven.pkg.github.com:443"
           },
           {
             "host": "github.com:443"
