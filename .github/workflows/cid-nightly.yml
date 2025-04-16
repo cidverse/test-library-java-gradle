@@ -308,8 +308,6 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           GH_HOSTNAME: "${{ vars.GH_HOSTNAME }}"
           GH_TOKEN: "${{ vars.GH_TOKEN }}"
-          ZIZMOR_NO_ONLINE_AUDITS: "${{ vars.ZIZMOR_NO_ONLINE_AUDITS }}"
-          ZIZMOR_OFFLINE: "${{ vars.ZIZMOR_OFFLINE }}"
         run: |
           cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "zizmor-scan"
       - name: Upload Outputs
@@ -418,7 +416,8 @@ jobs:
             jcenter.bintray.com:443
             oss.sonatype.org:443
             s01.oss.sonatype.org:443
-            maven.pkg.github.com
+            central.sonatype.com:443
+            maven.pkg.github.com:443
             github.com:443
             api.github.com:443
             codeload.github.com:443
