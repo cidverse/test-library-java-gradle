@@ -1,0 +1,327 @@
+{
+  "name": "main",
+  "stages": [
+    "build",
+    "test",
+    "scan"
+  ],
+  "steps": [
+    {
+      "id": "0",
+      "name": "gradle-build",
+      "slug": "gradle-build",
+      "stage": "build",
+      "scope": "module",
+      "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-build",
+      "module": "gradle-build-gradle-kts",
+      "access": {
+        "env": [
+          {
+            "name": "WRAPPER_VERIFICATION",
+            "description": "Enable verification of the gradle wrapper"
+          }
+        ],
+        "network": [
+          {
+            "host": "repo.maven.apache.org:443"
+          },
+          {
+            "host": "repo1.maven.org:443"
+          },
+          {
+            "host": "kotlinlang.org:443"
+          },
+          {
+            "host": "plugins.gradle.org:443"
+          },
+          {
+            "host": "plugins-artifacts.gradle.org:443"
+          },
+          {
+            "host": "services.gradle.org:443"
+          },
+          {
+            "host": "downloads.gradle.org:443"
+          },
+          {
+            "host": "jcenter.bintray.com:443"
+          },
+          {
+            "host": "github.com:443"
+          },
+          {
+            "host": "api.github.com:443"
+          },
+          {
+            "host": "codeload.github.com:443"
+          },
+          {
+            "host": "uploads.github.com:443"
+          },
+          {
+            "host": "objects.githubusercontent.com:443"
+          },
+          {
+            "host": "raw.githubusercontent.com:443"
+          },
+          {
+            "host": "ghcr.io:443"
+          },
+          {
+            "host": "pkg-containers.githubusercontent.com:443"
+          }
+        ]
+      },
+      "inputs": {},
+      "outputs": {},
+      "order": 0
+    },
+    {
+      "id": "1",
+      "name": "gradle-test",
+      "slug": "gradle-test",
+      "stage": "test",
+      "scope": "module",
+      "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
+      "module": "gradle-build-gradle-kts",
+      "access": {
+        "network": [
+          {
+            "host": "repo.maven.apache.org:443"
+          },
+          {
+            "host": "repo1.maven.org:443"
+          },
+          {
+            "host": "kotlinlang.org:443"
+          },
+          {
+            "host": "plugins.gradle.org:443"
+          },
+          {
+            "host": "plugins-artifacts.gradle.org:443"
+          },
+          {
+            "host": "services.gradle.org:443"
+          },
+          {
+            "host": "downloads.gradle.org:443"
+          },
+          {
+            "host": "jcenter.bintray.com:443"
+          },
+          {
+            "host": "github.com:443"
+          },
+          {
+            "host": "api.github.com:443"
+          },
+          {
+            "host": "codeload.github.com:443"
+          },
+          {
+            "host": "uploads.github.com:443"
+          },
+          {
+            "host": "objects.githubusercontent.com:443"
+          },
+          {
+            "host": "raw.githubusercontent.com:443"
+          },
+          {
+            "host": "ghcr.io:443"
+          },
+          {
+            "host": "pkg-containers.githubusercontent.com:443"
+          }
+        ]
+      },
+      "inputs": {},
+      "outputs": {
+        "artifacts": [
+          {
+            "type": "report",
+            "format": "sarif"
+          },
+          {
+            "type": "report",
+            "format": "jacoco"
+          }
+        ]
+      },
+      "order": 1
+    },
+    {
+      "id": "2",
+      "name": "gitleaks-scan",
+      "slug": "gitleaks-scan",
+      "stage": "scan",
+      "scope": "project",
+      "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gitleaks-scan",
+      "access": {
+        "executables": [
+          {
+            "name": "gitleaks",
+            "constraint": "\u003e= 0.0.0"
+          }
+        ],
+        "network": [
+          {
+            "host": "github.com:443"
+          },
+          {
+            "host": "api.github.com:443"
+          },
+          {
+            "host": "codeload.github.com:443"
+          },
+          {
+            "host": "uploads.github.com:443"
+          },
+          {
+            "host": "objects.githubusercontent.com:443"
+          },
+          {
+            "host": "raw.githubusercontent.com:443"
+          },
+          {
+            "host": "ghcr.io:443"
+          },
+          {
+            "host": "pkg-containers.githubusercontent.com:443"
+          }
+        ]
+      },
+      "inputs": {},
+      "outputs": {
+        "artifacts": [
+          {
+            "type": "report",
+            "format": "sarif"
+          }
+        ]
+      },
+      "order": 2
+    },
+    {
+      "id": "3",
+      "name": "semgrep-scan",
+      "slug": "semgrep-scan",
+      "stage": "scan",
+      "scope": "project",
+      "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+semgrep-scan",
+      "access": {
+        "env": [
+          {
+            "name": "SEMGREP_RULES",
+            "description": "See option --config."
+          },
+          {
+            "name": "SEMGREP_APP_TOKEN",
+            "description": "Semgrep AppSec Platform Token",
+            "secret": true
+          }
+        ],
+        "executables": [
+          {
+            "name": "semgrep",
+            "constraint": "\u003e= 0.0.0"
+          }
+        ],
+        "network": [
+          {
+            "host": "semgrep.dev:443"
+          },
+          {
+            "host": "github.com:443"
+          },
+          {
+            "host": "api.github.com:443"
+          },
+          {
+            "host": "codeload.github.com:443"
+          },
+          {
+            "host": "uploads.github.com:443"
+          },
+          {
+            "host": "objects.githubusercontent.com:443"
+          },
+          {
+            "host": "raw.githubusercontent.com:443"
+          },
+          {
+            "host": "ghcr.io:443"
+          },
+          {
+            "host": "pkg-containers.githubusercontent.com:443"
+          }
+        ]
+      },
+      "inputs": {},
+      "outputs": {
+        "artifacts": [
+          {
+            "type": "report",
+            "format": "sarif"
+          }
+        ]
+      },
+      "order": 3
+    },
+    {
+      "id": "4",
+      "name": "github-sarif-upload",
+      "slug": "github-sarif-upload",
+      "stage": "scan",
+      "scope": "project",
+      "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+github-sarif-upload",
+      "run-after": [
+        "gitleaks-scan",
+        "semgrep-scan"
+      ],
+      "uses-output-of": [
+        "gitleaks-scan",
+        "semgrep-scan"
+      ],
+      "access": {
+        "network": [
+          {
+            "host": "github.com:443"
+          },
+          {
+            "host": "api.github.com:443"
+          },
+          {
+            "host": "codeload.github.com:443"
+          },
+          {
+            "host": "uploads.github.com:443"
+          },
+          {
+            "host": "objects.githubusercontent.com:443"
+          },
+          {
+            "host": "raw.githubusercontent.com:443"
+          },
+          {
+            "host": "ghcr.io:443"
+          },
+          {
+            "host": "pkg-containers.githubusercontent.com:443"
+          }
+        ]
+      },
+      "inputs": {
+        "artifacts": [
+          {
+            "type": "report",
+            "format": "sarif"
+          }
+        ]
+      },
+      "outputs": {},
+      "order": 4
+    }
+  ]
+}
