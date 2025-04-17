@@ -272,6 +272,61 @@
     },
     {
       "id": "4",
+      "name": "trivyfs-scan",
+      "slug": "trivyfs-scan",
+      "stage": "scan",
+      "scope": "project",
+      "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+trivyfs-scan",
+      "access": {
+        "executables": [
+          {
+            "name": "trivy",
+            "constraint": "=\u003e 0.61.0"
+          }
+        ],
+        "network": [
+          {
+            "host": "mirror.gcr.io:443"
+          },
+          {
+            "host": "github.com:443"
+          },
+          {
+            "host": "api.github.com:443"
+          },
+          {
+            "host": "codeload.github.com:443"
+          },
+          {
+            "host": "uploads.github.com:443"
+          },
+          {
+            "host": "objects.githubusercontent.com:443"
+          },
+          {
+            "host": "raw.githubusercontent.com:443"
+          },
+          {
+            "host": "ghcr.io:443"
+          },
+          {
+            "host": "pkg-containers.githubusercontent.com:443"
+          }
+        ]
+      },
+      "inputs": {},
+      "outputs": {
+        "artifacts": [
+          {
+            "type": "report",
+            "format": "sarif"
+          }
+        ]
+      },
+      "order": 4
+    },
+    {
+      "id": "5",
       "name": "zizmor-scan",
       "slug": "zizmor-scan",
       "stage": "scan",
@@ -330,10 +385,10 @@
           }
         ]
       },
-      "order": 4
+      "order": 5
     },
     {
-      "id": "5",
+      "id": "6",
       "name": "github-sarif-upload",
       "slug": "github-sarif-upload",
       "stage": "scan",
@@ -342,11 +397,13 @@
       "run-after": [
         "gitleaks-scan",
         "semgrep-scan",
+        "trivyfs-scan",
         "zizmor-scan"
       ],
       "uses-output-of": [
         "gitleaks-scan",
         "semgrep-scan",
+        "trivyfs-scan",
         "zizmor-scan"
       ],
       "access": {
@@ -386,10 +443,10 @@
         ]
       },
       "outputs": {},
-      "order": 5
+      "order": 6
     },
     {
-      "id": "6",
+      "id": "7",
       "name": "gradle-publish (nightly-sonatype-snapshot)",
       "slug": "gradle-publish-nightly-sonatype-snapshot",
       "stage": "publish",
@@ -401,6 +458,7 @@
         "gradle-test",
         "gitleaks-scan",
         "semgrep-scan",
+        "trivyfs-scan",
         "zizmor-scan",
         "github-sarif-upload"
       ],
@@ -517,7 +575,7 @@
       },
       "inputs": {},
       "outputs": {},
-      "order": 6
+      "order": 7
     }
   ]
 }
