@@ -109,7 +109,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           WRAPPER_VERIFICATION: "${{ vars.WRAPPER_VERIFICATION }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "gradle-build"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "gradle-build"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -165,7 +165,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "gradle-test"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "gradle-test"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -214,7 +214,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "gitleaks-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "gitleaks-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -266,7 +266,7 @@ jobs:
           SEMGREP_RULES: "${{ vars.SEMGREP_RULES }}"
           SEMGREP_APP_TOKEN: "${{ secrets.SEMGREP_APP_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "semgrep-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "semgrep-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -316,7 +316,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "trivyfs-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "trivyfs-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -367,7 +367,7 @@ jobs:
           GH_HOSTNAME: "${{ vars.GH_HOSTNAME }}"
           GH_TOKEN: "${{ vars.GH_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "zizmor-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "zizmor-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -441,7 +441,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/main.json" --step "github-sarif-upload"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "main" --step "github-sarif-upload"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

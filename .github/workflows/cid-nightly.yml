@@ -101,7 +101,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           WRAPPER_VERIFICATION: "${{ vars.WRAPPER_VERIFICATION }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "gradle-build"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-build"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -157,7 +157,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "gradle-test"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-test"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -206,7 +206,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "gitleaks-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gitleaks-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -258,7 +258,7 @@ jobs:
           SEMGREP_RULES: "${{ vars.SEMGREP_RULES }}"
           SEMGREP_APP_TOKEN: "${{ secrets.SEMGREP_APP_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "semgrep-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "semgrep-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -308,7 +308,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "trivyfs-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "trivyfs-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -359,7 +359,7 @@ jobs:
           GH_HOSTNAME: "${{ vars.GH_HOSTNAME }}"
           GH_TOKEN: "${{ vars.GH_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "zizmor-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "zizmor-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -433,7 +433,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "github-sarif-upload"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "github-sarif-upload"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -505,7 +505,7 @@ jobs:
           MAVEN_GPG_SIGN_KEYID: "${{ secrets.MAVEN_GPG_SIGN_KEYID }}"
           GITHUB_ACTOR: "${{ vars.GITHUB_ACTOR }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --plan-file ".github/cid/plans/nightly.json" --step "gradle-publish-nightly-sonatype-snapshot"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-publish-nightly-sonatype-snapshot"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
