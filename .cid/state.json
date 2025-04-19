@@ -11,7 +11,7 @@
         "type": "nightly",
         "trigger_manual": true,
         "trigger_cron": true,
-        "trigger_cron_schedule": "24 0 * * *",
+        "trigger_cron_schedule": "24 0 * * 6",
         "environment_pattern": "nightly-.*"
       },
       "plan": {
@@ -25,8 +25,8 @@
         "steps": [
           {
             "id": "0",
-            "name": "gradle-build",
-            "slug": "gradle-build",
+            "name": "gradle-build [test-library-java-gradle]",
+            "slug": "gradle-build-test-library-java-gradle",
             "stage": "build",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-build",
@@ -95,8 +95,8 @@
           },
           {
             "id": "1",
-            "name": "gradle-test",
-            "slug": "gradle-test",
+            "name": "gradle-test [test-library-java-gradle]",
+            "slug": "gradle-test-test-library-java-gradle",
             "stage": "test",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
@@ -180,6 +180,10 @@
                 {
                   "name": "gitleaks",
                   "constraint": "\u003e= 0.0.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0"
                 }
               ],
               "network": [
@@ -215,6 +219,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -281,6 +289,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -336,6 +348,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -412,12 +428,28 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+github-sarif-upload",
             "run-after": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
             ],
             "uses-output-of": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "uses-output-of-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
@@ -463,20 +495,29 @@
           },
           {
             "id": "7",
-            "name": "gradle-publish (nightly-sonatype-snapshot)",
-            "slug": "gradle-publish-nightly-sonatype-snapshot",
+            "name": "gradle-publish [test-library-java-gradle] (nightly-sonatype-snapshot)",
+            "slug": "gradle-publish-test-library-java-gradle-nightly-sonatype-snapshot",
             "stage": "publish",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-publish",
             "module": "gradle-build-gradle-kts",
             "run-after": [
-              "gradle-build",
-              "gradle-test",
+              "github-sarif-upload",
               "gitleaks-scan",
+              "gradle-build-test-library-java-gradle",
+              "gradle-test-test-library-java-gradle",
               "semgrep-scan",
               "trivyfs-scan",
-              "zizmor-scan",
-              "github-sarif-upload"
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "github-sarif-upload",
+              "gitleaks-scan",
+              "gradle-build [test-library-java-gradle]",
+              "gradle-test [test-library-java-gradle]",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
             ],
             "environment": "nightly-sonatype-snapshot",
             "access": {
@@ -599,32 +640,37 @@
         "actions/checkout": {
           "id": "actions/checkout",
           "type": "github-action",
-          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683",
-          "version": "v4.2.2"
+          "version": "v4.2.2",
+          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683"
         },
         "actions/download-artifact": {
           "id": "actions/download-artifact",
           "type": "github-action",
-          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e",
-          "version": "v4.2.1"
+          "version": "v4.2.1",
+          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e"
         },
         "actions/upload-artifact": {
           "id": "actions/upload-artifact",
           "type": "github-action",
-          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02",
-          "version": "v4.6.2"
+          "version": "v4.6.2",
+          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+        },
+        "cid": {
+          "id": "cid",
+          "type": "binary",
+          "version": "0.5.0"
         },
         "cidverse/ghact-cid-setup": {
           "id": "cidverse/ghact-cid-setup",
           "type": "github-action",
-          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb",
-          "version": "v0.2.0"
+          "version": "v0.2.0",
+          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb"
         },
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf",
-          "version": "v2.11.1"
+          "version": "v2.11.1",
+          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
         }
       },
       "ignore_files": [
@@ -659,8 +705,8 @@
         "steps": [
           {
             "id": "0",
-            "name": "gradle-build",
-            "slug": "gradle-build",
+            "name": "gradle-build [test-library-java-gradle]",
+            "slug": "gradle-build-test-library-java-gradle",
             "stage": "build",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-build",
@@ -729,8 +775,8 @@
           },
           {
             "id": "1",
-            "name": "gradle-test",
-            "slug": "gradle-test",
+            "name": "gradle-test [test-library-java-gradle]",
+            "slug": "gradle-test-test-library-java-gradle",
             "stage": "test",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
@@ -814,6 +860,10 @@
                 {
                   "name": "gitleaks",
                   "constraint": "\u003e= 0.0.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0"
                 }
               ],
               "network": [
@@ -849,6 +899,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -915,6 +969,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -970,6 +1028,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -1046,12 +1108,28 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+github-sarif-upload",
             "run-after": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
             ],
             "uses-output-of": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "uses-output-of-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
@@ -1101,32 +1179,37 @@
         "actions/checkout": {
           "id": "actions/checkout",
           "type": "github-action",
-          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683",
-          "version": "v4.2.2"
+          "version": "v4.2.2",
+          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683"
         },
         "actions/download-artifact": {
           "id": "actions/download-artifact",
           "type": "github-action",
-          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e",
-          "version": "v4.2.1"
+          "version": "v4.2.1",
+          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e"
         },
         "actions/upload-artifact": {
           "id": "actions/upload-artifact",
           "type": "github-action",
-          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02",
-          "version": "v4.6.2"
+          "version": "v4.6.2",
+          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+        },
+        "cid": {
+          "id": "cid",
+          "type": "binary",
+          "version": "0.5.0"
         },
         "cidverse/ghact-cid-setup": {
           "id": "cidverse/ghact-cid-setup",
           "type": "github-action",
-          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb",
-          "version": "v0.2.0"
+          "version": "v0.2.0",
+          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb"
         },
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf",
-          "version": "v2.11.1"
+          "version": "v2.11.1",
+          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
         }
       },
       "ignore_files": [
@@ -1151,7 +1234,7 @@
         "trigger_manual": true,
         "trigger_push": true,
         "trigger_push_tags": [
-          "v*.*.*"
+          "v[0-9]+.[0-9]+.[0-9]+"
         ],
         "environment_pattern": "release-.*"
       },
@@ -1160,13 +1243,14 @@
         "stages": [
           "build",
           "test",
-          "scan"
+          "scan",
+          "publish"
         ],
         "steps": [
           {
             "id": "0",
-            "name": "gradle-build",
-            "slug": "gradle-build",
+            "name": "gradle-build [test-library-java-gradle]",
+            "slug": "gradle-build-test-library-java-gradle",
             "stage": "build",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-build",
@@ -1235,8 +1319,8 @@
           },
           {
             "id": "1",
-            "name": "gradle-test",
-            "slug": "gradle-test",
+            "name": "gradle-test [test-library-java-gradle]",
+            "slug": "gradle-test-test-library-java-gradle",
             "stage": "test",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
@@ -1320,6 +1404,10 @@
                 {
                   "name": "gitleaks",
                   "constraint": "\u003e= 0.0.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0"
                 }
               ],
               "network": [
@@ -1355,6 +1443,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -1421,6 +1513,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -1476,6 +1572,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -1552,12 +1652,28 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+github-sarif-upload",
             "run-after": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
             ],
             "uses-output-of": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "uses-output-of-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
@@ -1600,6 +1716,143 @@
             },
             "outputs": {},
             "order": 6
+          },
+          {
+            "id": "7",
+            "name": "changelog-generate",
+            "slug": "changelog-generate",
+            "stage": "publish",
+            "scope": "project",
+            "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+changelog-generate",
+            "run-after": [
+              "github-sarif-upload",
+              "gitleaks-scan",
+              "gradle-build-test-library-java-gradle",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "github-sarif-upload",
+              "gitleaks-scan",
+              "gradle-build [test-library-java-gradle]",
+              "gradle-test [test-library-java-gradle]",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "access": {
+              "network": [
+                {
+                  "host": "github.com:443"
+                },
+                {
+                  "host": "api.github.com:443"
+                },
+                {
+                  "host": "codeload.github.com:443"
+                },
+                {
+                  "host": "uploads.github.com:443"
+                },
+                {
+                  "host": "objects.githubusercontent.com:443"
+                },
+                {
+                  "host": "raw.githubusercontent.com:443"
+                },
+                {
+                  "host": "ghcr.io:443"
+                },
+                {
+                  "host": "pkg-containers.githubusercontent.com:443"
+                }
+              ]
+            },
+            "inputs": {},
+            "outputs": {
+              "artifacts": [
+                {
+                  "type": "changelog"
+                }
+              ]
+            },
+            "order": 7
+          },
+          {
+            "id": "8",
+            "name": "github-release-publish",
+            "slug": "github-release-publish",
+            "stage": "publish",
+            "scope": "project",
+            "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+github-release-publish",
+            "run-after": [
+              "changelog-generate",
+              "github-sarif-upload",
+              "gitleaks-scan",
+              "gradle-build-test-library-java-gradle",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "changelog-generate",
+              "github-sarif-upload",
+              "gitleaks-scan",
+              "gradle-build [test-library-java-gradle]",
+              "gradle-test [test-library-java-gradle]",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "uses-output-of": [
+              "changelog-generate"
+            ],
+            "uses-output-of-by-name": [
+              "changelog-generate"
+            ],
+            "access": {
+              "network": [
+                {
+                  "host": "github.com:443"
+                },
+                {
+                  "host": "api.github.com:443"
+                },
+                {
+                  "host": "codeload.github.com:443"
+                },
+                {
+                  "host": "uploads.github.com:443"
+                },
+                {
+                  "host": "objects.githubusercontent.com:443"
+                },
+                {
+                  "host": "raw.githubusercontent.com:443"
+                },
+                {
+                  "host": "ghcr.io:443"
+                },
+                {
+                  "host": "pkg-containers.githubusercontent.com:443"
+                }
+              ]
+            },
+            "inputs": {
+              "artifacts": [
+                {
+                  "type": "changelog"
+                },
+                {
+                  "type": "binary"
+                }
+              ]
+            },
+            "outputs": {},
+            "order": 8
           }
         ]
       },
@@ -1607,32 +1860,37 @@
         "actions/checkout": {
           "id": "actions/checkout",
           "type": "github-action",
-          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683",
-          "version": "v4.2.2"
+          "version": "v4.2.2",
+          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683"
         },
         "actions/download-artifact": {
           "id": "actions/download-artifact",
           "type": "github-action",
-          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e",
-          "version": "v4.2.1"
+          "version": "v4.2.1",
+          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e"
         },
         "actions/upload-artifact": {
           "id": "actions/upload-artifact",
           "type": "github-action",
-          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02",
-          "version": "v4.6.2"
+          "version": "v4.6.2",
+          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+        },
+        "cid": {
+          "id": "cid",
+          "type": "binary",
+          "version": "0.5.0"
         },
         "cidverse/ghact-cid-setup": {
           "id": "cidverse/ghact-cid-setup",
           "type": "github-action",
-          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb",
-          "version": "v0.2.0"
+          "version": "v0.2.0",
+          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb"
         },
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf",
-          "version": "v2.11.1"
+          "version": "v2.11.1",
+          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
         }
       },
       "ignore_files": [
@@ -1670,8 +1928,8 @@
         "steps": [
           {
             "id": "0",
-            "name": "gradle-build",
-            "slug": "gradle-build",
+            "name": "gradle-build [test-library-java-gradle]",
+            "slug": "gradle-build-test-library-java-gradle",
             "stage": "build",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-build",
@@ -1740,8 +1998,8 @@
           },
           {
             "id": "1",
-            "name": "gradle-test",
-            "slug": "gradle-test",
+            "name": "gradle-test [test-library-java-gradle]",
+            "slug": "gradle-test-test-library-java-gradle",
             "stage": "test",
             "scope": "module",
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
@@ -1825,6 +2083,10 @@
                 {
                   "name": "gitleaks",
                   "constraint": "\u003e= 0.0.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0"
                 }
               ],
               "network": [
@@ -1860,6 +2122,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -1926,6 +2192,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -1981,6 +2251,10 @@
                 {
                   "type": "report",
                   "format": "sarif"
+                },
+                {
+                  "type": "report",
+                  "format": "gl-codequality"
                 }
               ]
             },
@@ -2057,12 +2331,28 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+github-sarif-upload",
             "run-after": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "run-after-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
             ],
             "uses-output-of": [
               "gitleaks-scan",
+              "gradle-test-test-library-java-gradle",
+              "semgrep-scan",
+              "trivyfs-scan",
+              "zizmor-scan"
+            ],
+            "uses-output-of-by-name": [
+              "gitleaks-scan",
+              "gradle-test [test-library-java-gradle]",
               "semgrep-scan",
               "trivyfs-scan",
               "zizmor-scan"
@@ -2112,32 +2402,37 @@
         "actions/checkout": {
           "id": "actions/checkout",
           "type": "github-action",
-          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683",
-          "version": "v4.2.2"
+          "version": "v4.2.2",
+          "hash": "11bd71901bbe5b1630ceea73d27597364c9af683"
         },
         "actions/download-artifact": {
           "id": "actions/download-artifact",
           "type": "github-action",
-          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e",
-          "version": "v4.2.1"
+          "version": "v4.2.1",
+          "hash": "95815c38cf2ff2164869cbab79da8d1f422bc89e"
         },
         "actions/upload-artifact": {
           "id": "actions/upload-artifact",
           "type": "github-action",
-          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02",
-          "version": "v4.6.2"
+          "version": "v4.6.2",
+          "hash": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+        },
+        "cid": {
+          "id": "cid",
+          "type": "binary",
+          "version": "0.5.0"
         },
         "cidverse/ghact-cid-setup": {
           "id": "cidverse/ghact-cid-setup",
           "type": "github-action",
-          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb",
-          "version": "v0.2.0"
+          "version": "v0.2.0",
+          "hash": "c6dac0517d28bd8871c195fee9a6bd5a5854d5cb"
         },
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf",
-          "version": "v2.11.1"
+          "version": "v2.11.1",
+          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
         }
       },
       "ignore_files": [

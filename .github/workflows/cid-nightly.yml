@@ -23,7 +23,7 @@ on:
           - error
   # cron-based trigger
   schedule:
-    - cron: '24 0 * * *'
+    - cron: '24 0 * * 6'
 
 # permissions, see https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions and https://docs.github.com/en/rest/overview/permissions-required-for-github-apps
 permissions:
@@ -47,16 +47,15 @@ concurrency:
 
 env:
   CID_WORKFLOW: 'main'
-  CID_VERSION: 'v0.5.0'
   CID_LOGLEVEL: "${{ github.event.inputs.loglevel || 'info' }}"
   # allowed modes are 'block' and 'audit'. Using https://github.com/step-security/harden-runner to harden the runner.
   EGRESS_POLICY: 'block'
 
 # jobs
 jobs:
-  # gradle-build
-  gradle-build:
-    name: 'gradle-build'
+  # gradle-build [test-library-java-gradle]
+  gradle-build-test-library-java-gradle:
+    name: 'gradle-build [test-library-java-gradle]'
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
     permissions:
       id-token: write # provenance signing
@@ -88,32 +87,32 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Action - gradle-build
+      - name: Action - gradle-build [test-library-java-gradle]
         env:
           CID_WORKFLOW: "${{ env.CID_WORKFLOW }}"
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           WRAPPER_VERIFICATION: "${{ vars.WRAPPER_VERIFICATION }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-build"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-build-test-library-java-gradle"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: "gradle-build-${{ github.run_id }}"
-          path: .dist/
+          name: "gradle-build-test-library-java-gradle-${{ github.run_id }}"
+          path: ".dist/gradle-build-test-library-java-gradle/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
           include-hidden-files: true
-  # gradle-test
-  gradle-test:
-    name: 'gradle-test'
+  # gradle-test [test-library-java-gradle]
+  gradle-test-test-library-java-gradle:
+    name: 'gradle-test [test-library-java-gradle]'
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
     permissions:
       id-token: write # provenance signing
@@ -145,24 +144,24 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Action - gradle-test
+      - name: Action - gradle-test [test-library-java-gradle]
         env:
           CID_WORKFLOW: "${{ env.CID_WORKFLOW }}"
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-test"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-test-test-library-java-gradle"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: "gradle-test-${{ github.run_id }}"
-          path: .dist/
+          name: "gradle-test-test-library-java-gradle-${{ github.run_id }}"
+          path: ".dist/gradle-test-test-library-java-gradle/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
@@ -194,7 +193,7 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -211,7 +210,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: "gitleaks-scan-${{ github.run_id }}"
-          path: .dist/
+          path: ".dist/gitleaks-scan/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
@@ -244,7 +243,7 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -263,7 +262,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: "semgrep-scan-${{ github.run_id }}"
-          path: .dist/
+          path: ".dist/semgrep-scan/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
@@ -296,7 +295,7 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -313,7 +312,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: "trivyfs-scan-${{ github.run_id }}"
-          path: .dist/
+          path: ".dist/trivyfs-scan/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
@@ -345,7 +344,7 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -364,7 +363,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: "zizmor-scan-${{ github.run_id }}"
-          path: .dist/
+          path: ".dist/zizmor-scan/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
@@ -373,7 +372,7 @@ jobs:
   github-sarif-upload:
     name: 'github-sarif-upload'
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
-    needs: [gitleaks-scan, semgrep-scan, trivyfs-scan, zizmor-scan]
+    needs: [gitleaks-scan, gradle-test-test-library-java-gradle, semgrep-scan, trivyfs-scan, zizmor-scan]
     permissions:
       id-token: write # provenance signing
       security-events: write # upload security events
@@ -397,7 +396,7 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -407,25 +406,31 @@ jobs:
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
         with:
           name: "gitleaks-scan-${{ github.run_id }}"
-          path: .dist
+          path: ".dist/gitleaks-scan"
+        continue-on-error: true
+      - name: Download Inputs > gradle-test-test-library-java-gradle
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        with:
+          name: "gradle-test-test-library-java-gradle-${{ github.run_id }}"
+          path: ".dist/gradle-test-test-library-java-gradle"
         continue-on-error: true
       - name: Download Inputs > semgrep-scan
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
         with:
           name: "semgrep-scan-${{ github.run_id }}"
-          path: .dist
+          path: ".dist/semgrep-scan"
         continue-on-error: true
       - name: Download Inputs > trivyfs-scan
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
         with:
           name: "trivyfs-scan-${{ github.run_id }}"
-          path: .dist
+          path: ".dist/trivyfs-scan"
         continue-on-error: true
       - name: Download Inputs > zizmor-scan
         uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
         with:
           name: "zizmor-scan-${{ github.run_id }}"
-          path: .dist
+          path: ".dist/zizmor-scan"
         continue-on-error: true
       - name: Action - github-sarif-upload
         env:
@@ -438,16 +443,16 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: "github-sarif-upload-${{ github.run_id }}"
-          path: .dist/
+          path: ".dist/github-sarif-upload/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
           include-hidden-files: true
-  # gradle-publish (nightly-sonatype-snapshot)
-  gradle-publish-nightly-sonatype-snapshot:
-    name: 'gradle-publish (nightly-sonatype-snapshot)'
+  # gradle-publish [test-library-java-gradle] (nightly-sonatype-snapshot)
+  gradle-publish-test-library-java-gradle-nightly-sonatype-snapshot:
+    name: 'gradle-publish [test-library-java-gradle] (nightly-sonatype-snapshot)'
     runs-on: ubuntu-24.04 # https://github.com/actions/runner-images
-    needs: [gradle-build, gradle-test, gitleaks-scan, semgrep-scan, trivyfs-scan, zizmor-scan, github-sarif-upload]
+    needs: [github-sarif-upload, gitleaks-scan, gradle-build-test-library-java-gradle, gradle-test-test-library-java-gradle, semgrep-scan, trivyfs-scan, zizmor-scan]
     permissions:
       id-token: write # provenance signing
       packages: write # upload packages
@@ -485,13 +490,13 @@ jobs:
       - name: Setup Tools
         uses: cidverse/ghact-cid-setup@c6dac0517d28bd8871c195fee9a6bd5a5854d5cb # v0.2.0
         with:
-          version: "${{ env.CID_VERSION }}"
+          version: "v0.5.0"
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Action - gradle-publish (nightly-sonatype-snapshot)
+      - name: Action - gradle-publish [test-library-java-gradle] (nightly-sonatype-snapshot)
         env:
           CID_WORKFLOW: "${{ env.CID_WORKFLOW }}"
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
@@ -505,12 +510,12 @@ jobs:
           MAVEN_GPG_SIGN_KEYID: "${{ secrets.MAVEN_GPG_SIGN_KEYID }}"
           GITHUB_ACTOR: "${{ vars.GITHUB_ACTOR }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-publish-nightly-sonatype-snapshot"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "nightly" --step "gradle-publish-test-library-java-gradle-nightly-sonatype-snapshot"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: "gradle-publish-nightly-sonatype-snapshot-${{ github.run_id }}"
-          path: .dist/
+          name: "gradle-publish-test-library-java-gradle-nightly-sonatype-snapshot-${{ github.run_id }}"
+          path: ".dist/gradle-publish-test-library-java-gradle-nightly-sonatype-snapshot/"
           retention-days: 1
           if-no-files-found: ignore
           compression-level: 6
