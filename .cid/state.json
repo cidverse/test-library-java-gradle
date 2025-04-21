@@ -38,6 +38,12 @@
                   "description": "Enable verification of the gradle wrapper"
                 }
               ],
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -102,6 +108,12 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
             "module": "gradle-build-gradle-kts",
             "access": {
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -179,11 +191,11 @@
               "executables": [
                 {
                   "name": "gitleaks",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 },
                 {
                   "name": "gitlab-sarif-converter",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -250,7 +262,11 @@
               "executables": [
                 {
                   "name": "semgrep",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -310,6 +326,10 @@
                 {
                   "name": "trivy",
                   "constraint": "=\u003e 0.61.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -564,7 +584,7 @@
               "executables": [
                 {
                   "name": "java",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 21.0.0-0"
                 }
               ],
               "network": [
@@ -718,6 +738,12 @@
                   "description": "Enable verification of the gradle wrapper"
                 }
               ],
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -782,6 +808,12 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
             "module": "gradle-build-gradle-kts",
             "access": {
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -859,11 +891,11 @@
               "executables": [
                 {
                   "name": "gitleaks",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 },
                 {
                   "name": "gitlab-sarif-converter",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -930,7 +962,11 @@
               "executables": [
                 {
                   "name": "semgrep",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -990,6 +1026,10 @@
                 {
                   "name": "trivy",
                   "constraint": "=\u003e 0.61.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -1262,6 +1302,12 @@
                   "description": "Enable verification of the gradle wrapper"
                 }
               ],
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -1326,6 +1372,12 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
             "module": "gradle-build-gradle-kts",
             "access": {
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -1403,11 +1455,11 @@
               "executables": [
                 {
                   "name": "gitleaks",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 },
                 {
                   "name": "gitlab-sarif-converter",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -1474,7 +1526,11 @@
               "executables": [
                 {
                   "name": "semgrep",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -1534,6 +1590,10 @@
                 {
                   "name": "trivy",
                   "constraint": "=\u003e 0.61.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -1941,6 +2001,12 @@
                   "description": "Enable verification of the gradle wrapper"
                 }
               ],
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -2005,6 +2071,12 @@
             "action": "container://ghcr.io/cidverse/cid-actions-go:0.1.0+gradle-test",
             "module": "gradle-build-gradle-kts",
             "access": {
+              "executables": [
+                {
+                  "name": "java",
+                  "constraint": "\u003e= 21.0.0-0"
+                }
+              ],
               "network": [
                 {
                   "host": "repo.maven.apache.org:443"
@@ -2082,11 +2154,11 @@
               "executables": [
                 {
                   "name": "gitleaks",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 },
                 {
                   "name": "gitlab-sarif-converter",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -2153,7 +2225,11 @@
               "executables": [
                 {
                   "name": "semgrep",
-                  "constraint": "\u003e= 0.0.0"
+                  "constraint": "\u003e= 0.0.0-0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
@@ -2213,6 +2289,10 @@
                 {
                   "name": "trivy",
                   "constraint": "=\u003e 0.61.0"
+                },
+                {
+                  "name": "gitlab-sarif-converter",
+                  "constraint": "\u003e= 0.0.0-0"
                 }
               ],
               "network": [
