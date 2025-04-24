@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -95,7 +95,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           WRAPPER_VERIFICATION: "${{ vars.WRAPPER_VERIFICATION }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "gradle-build-test-library-java-gradle"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "gradle-build-test-library-java-gradle"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -114,7 +114,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -151,7 +151,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "gradle-test-test-library-java-gradle"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "gradle-test-test-library-java-gradle"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -170,7 +170,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -199,7 +199,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "gitleaks-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "gitleaks-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -218,7 +218,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -250,7 +250,7 @@ jobs:
           SEMGREP_RULES: "${{ vars.SEMGREP_RULES }}"
           SEMGREP_APP_TOKEN: "${{ secrets.SEMGREP_APP_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "semgrep-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "semgrep-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -269,7 +269,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -299,7 +299,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "trivyfs-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "trivyfs-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -318,7 +318,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -349,7 +349,7 @@ jobs:
           GH_HOSTNAME: "${{ vars.GH_HOSTNAME }}"
           GH_TOKEN: "${{ vars.GH_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "zizmor-scan"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "zizmor-scan"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -369,7 +369,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-telemetry: true
           disable-sudo: true
@@ -428,7 +428,7 @@ jobs:
           CID_LOGLEVEL: "${{ env.CID_LOGLEVEL }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-wf-name "pull-request" --step "github-sarif-upload"
+          cid --log-level=${CID_LOGLEVEL:-info} plan execute --state-file ".cid/state-github.json" --state-wf-name "pull-request" --step "github-sarif-upload"
       - name: Upload Outputs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
