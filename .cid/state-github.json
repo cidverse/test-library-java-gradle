@@ -175,6 +175,10 @@
                 {
                   "type": "report",
                   "format": "jacoco"
+                },
+                {
+                  "type": "report",
+                  "format": "junit"
                 }
               ]
             },
@@ -689,8 +693,8 @@
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "version": "v2.11.1",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
+          "version": "v2.12.0",
+          "hash": "0634a2670c59f64b4a01f0f96f84700a4088b9f0"
         }
       },
       "ignore_files": [
@@ -875,6 +879,10 @@
                 {
                   "type": "report",
                   "format": "jacoco"
+                },
+                {
+                  "type": "report",
+                  "format": "junit"
                 }
               ]
             },
@@ -1248,8 +1256,8 @@
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "version": "v2.11.1",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
+          "version": "v2.12.0",
+          "hash": "0634a2670c59f64b4a01f0f96f84700a4088b9f0"
         }
       },
       "ignore_files": [
@@ -1439,6 +1447,10 @@
                 {
                   "type": "report",
                   "format": "jacoco"
+                },
+                {
+                  "type": "report",
+                  "format": "junit"
                 }
               ]
             },
@@ -1949,8 +1961,8 @@
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "version": "v2.11.1",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
+          "version": "v2.12.0",
+          "hash": "0634a2670c59f64b4a01f0f96f84700a4088b9f0"
         }
       },
       "ignore_files": [
@@ -2138,6 +2150,10 @@
                 {
                   "type": "report",
                   "format": "jacoco"
+                },
+                {
+                  "type": "report",
+                  "format": "junit"
                 }
               ]
             },
@@ -2511,8 +2527,8 @@
         "step-security/harden-runner": {
           "id": "step-security/harden-runner",
           "type": "github-action",
-          "version": "v2.11.1",
-          "hash": "c6295a65d1254861815972266d5933fd6e532bdf"
+          "version": "v2.12.0",
+          "hash": "0634a2670c59f64b4a01f0f96f84700a4088b9f0"
         }
       },
       "ignore_files": [
